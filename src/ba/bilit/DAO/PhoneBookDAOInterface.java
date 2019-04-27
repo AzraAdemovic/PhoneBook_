@@ -17,12 +17,16 @@ public interface PhoneBookDAOInterface {
 
 	public Persons getPerson(String lastName, List<Persons> list) throws SQLException;
 
-	public boolean updatePeson(Persons person) throws SQLException;
+	public boolean updatePerson(Persons person) throws SQLException;
 
 	public boolean deletePerson(Persons person) throws SQLException;
 
 	public boolean savePerson(Persons person) throws SQLException;
 
 	public Persons getPerson(int personsID) throws SQLException;
+	
+	public boolean checkUserLogin(String firstName, String password) throws SQLException;
+	
+	
 
 }

@@ -66,8 +66,8 @@ public class PhoneBookUI {
 	public void deletePerson(int personsID) {
 		
 		try {
-			PBIDAO.getPerson(personsID);
-			System.out.println(person);
+			person = PBIDAO.getPerson(personsID);
+		     System.out.println(person);
 			System.out.println("Are you sure that you want delete this contact?\n(R-Run/S-Stop)");
 			char allow = input.next().charAt(0);
 			if (allow == 'R' || allow == 'r') {

@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import ba.bildit.DTO.Persons;
 import ba.bildit.DTO.Users;
 
@@ -61,7 +62,7 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 
 	@Override
 	public Persons getPerson(int personsID) throws SQLException {
-		Persons person = null;
+		Persons person = new Persons();
 		String query = "SELECT * FROM persons WHERE personsId = ?";
 
 		ResultSet rs = null;
@@ -94,8 +95,8 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 	}
 
 	@Override
-	public boolean updatePeson(Persons person) throws SQLException {
-		String query = "UPDATE person SET firstName = ?, lastName= ?, phoneNumber=? WHERE personsId = ?";
+	public boolean updatePerson(Persons person) throws SQLException {
+		String query = "UPDATE person SET firstName = ?, lastName= ?, phoneNumber = ? WHERE personsId = ?";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 			preparedStatement.setString(1, person.getFirstName());
 			preparedStatement.setString(2, person.getLastName());
@@ -179,4 +180,33 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 		return user;
 	}
 
-}
+	@Override
+	public boolean checkUserLogin(String lastName, String userspassword) throws SQLException {
+		//	Users user = null;
+			String query = "SELECT * FROM users WHERE lastName = ? AND userspassword=?";
+
+			ResultSet rs = null;
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+				preparedStatement.setString(1, lastName);
+				preparedStatement.setString(2,userspassword);
+				rs = preparedStatement.executeQuery();
+
+				if (rs.next()) {
+					rs.close();
+					return true;
+				}
+				else
+				{
+					rs.close();
+					return false;
+				}
+
+
+		}
+
+	}
+
+	
+	
+
+
