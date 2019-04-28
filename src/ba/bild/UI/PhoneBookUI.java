@@ -44,7 +44,8 @@ public class PhoneBookUI {
 		return user;
 	}
 
-	public Persons editPerson() {
+	public Persons editPerson(int personsID) throws SQLException {
+		person = PBIDAO.getPerson(personsID);
 		System.out.println("If you want edit existing contact please follow the steps:");
 		System.out.println();
 		System.out.println("Current name of person is " + person.getFirstName() + " set new name :");

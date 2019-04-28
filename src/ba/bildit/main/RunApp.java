@@ -22,6 +22,8 @@ public class RunApp {
 		Menu menu = new Menu();
 		ArrayList<Persons> list;
 		Persons person;
+		Users user = new Users();
+
 		int personId;
 		// String password = null;
 		// Data Access Layer
@@ -42,7 +44,6 @@ public class RunApp {
 				break;
 			case 1:
 
-				Users user = new Users();
 				System.out.println("Enter name:");
 				user.setFirstName(input.nextLine());
 				System.out.println("Enter last name:");
@@ -62,7 +63,7 @@ public class RunApp {
 				String lastname = input.nextLine();
 				System.out.println("Enter password:");
 				password = input.nextLine();
-				if (PBDAO.checkUserLogin(lastname, password)) {
+				if (PBDAO.checkUserLogin(lastname, password)){
 					while (running) {
 
 						menu.showOptions();
@@ -70,9 +71,13 @@ public class RunApp {
 						switch (option) {
 
 						case 1:
+							int ID = user.getUsersID();
+							user = PBDAO.getUser(ID);
+							System.out.println(user);
+
 							person = PBUI.createPerson();
 							if (PBBO.isPhoneNumberValid(person.getPhoneNumber(), person)) {
-								PBDAO.savePerson(person);
+								PBDAO.savePerson(person ,ID);
 							} else {
 								System.out.println("Contact can not be saved. Please try again.");
 							}
@@ -83,9 +88,9 @@ public class RunApp {
 							personId = input.nextInt();
 							try {
 								person = PBDAO.getPerson(personId);
-								Persons editPerson = PBUI.editPerson();
+								//Persons editPerson = PBUI.editPerson();
 
-								if (PBDAO.updatePerson(editPerson)) {
+								if (PBDAO.updatePerson(PBUI.editPerson(personId))) {
 									System.out.println("Updated.");
 								} else {
 									System.out.println("Failed.");

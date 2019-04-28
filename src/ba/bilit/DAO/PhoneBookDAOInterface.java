@@ -21,7 +21,7 @@ public interface PhoneBookDAOInterface {
 
 	public boolean deletePerson(Persons person) throws SQLException;
 
-	public boolean savePerson(Persons person) throws SQLException;
+	public boolean savePerson(Persons person, int ID) throws SQLException;
 
 	public Persons getPerson(int personsID) throws SQLException;
 	

@@ -130,12 +130,13 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 	}
 
 	@Override
-	public boolean savePerson(Persons person) throws SQLException {
-		String query = "INSERT INTO persons (firstName,lastName,phoneNumber) VALUES (?,?,?)";
+	public boolean savePerson(Persons person, int ID) throws SQLException {
+		String query = "INSERT INTO persons (firstName,lastName,phoneNumber,user) VALUES (?,?,?,?)";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 			preparedStatement.setString(1, person.getFirstName());
 			preparedStatement.setString(2, person.getLastName());
 			preparedStatement.setString(3, person.getPhoneNumber());
+			preparedStatement.setInt(4, ID);
 
 			if (preparedStatement.executeUpdate() == 1) {
 				return true;

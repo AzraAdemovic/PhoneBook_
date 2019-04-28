@@ -3,3 +3,6 @@
 .settings/
 bin/
 target/
+.sql
+Dump20190428.sql
+skripa1.sql
