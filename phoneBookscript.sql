@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `phonebook` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
-USE `phonebook`;
 -- MySQL dump 10.13  Distrib 8.0.15, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: phonebook
@@ -26,12 +24,14 @@ DROP TABLE IF EXISTS `persons`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `persons` (
   `personsId` int(11) NOT NULL AUTO_INCREMENT,
-  `firstName` varchar(20) NOT NULL,
-  `lastName` varchar(30) NOT NULL,
-  `phoneNumber` varchar(30) NOT NULL,
+  `firstName` varchar(45) DEFAULT NULL,
+  `lastName` varchar(45) DEFAULT NULL,
+  `phoneNumber` varchar(45) DEFAULT NULL,
+  `user` int(11) DEFAULT NULL,
   PRIMARY KEY (`personsId`),
-  CONSTRAINT `persons_ibfk_1` FOREIGN KEY (`personsId`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `userID_idx` (`user`),
+  CONSTRAINT `userID` FOREIGN KEY (`user`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `persons` (
 
 LOCK TABLES `persons` WRITE;
 /*!40000 ALTER TABLE `persons` DISABLE KEYS */;
-INSERT INTO `persons` VALUES (1,'azra','ademovic','062995336');
+INSERT INTO `persons` VALUES (1,'amina','masnic','062986985',NULL);
 /*!40000 ALTER TABLE `persons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +57,7 @@ CREATE TABLE `users` (
   `lastName` varchar(30) NOT NULL,
   `userspassword` varchar(30) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,9 +66,13 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'ismail','brkic','1234567678');
+INSERT INTO `users` VALUES (1,'ismail','brkic','1234567678'),(2,'','nikic','12345678'),(3,'azra','ademovic','1234Azra'),(4,'niko','nikad','123');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'phonebook'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -79,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-04-25 11:03:21
+-- Dump completed on 2019-04-28 17:17:33
