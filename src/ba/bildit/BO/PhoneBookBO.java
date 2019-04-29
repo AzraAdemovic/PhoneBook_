@@ -1,10 +1,11 @@
 package ba.bildit.BO;
 
+import java.util.List;
+
 import ba.bildit.DTO.Persons;
 import ba.bildit.DTO.Users;
 
 public class PhoneBookBO {
-
 
 	public boolean isUserNull(Users user) {
 		if (user == null) {
@@ -43,6 +44,17 @@ public class PhoneBookBO {
 			}
 		}
 		return true;
+	}
+
+	public boolean checkIfIdIsValid(int id, List<Persons> persons) {
+		boolean valid = false;
+		for (int i = 0; i < persons.size(); i++) {
+			Persons person = persons.get(i);
+			if (person.getPersonsID() == id) {
+				valid = true;
+			}
+		}
+		return valid;
 	}
 
 }

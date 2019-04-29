@@ -8,14 +8,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import ba.bildit.DTO.Persons;
 import ba.bildit.DTO.Users;
 
 public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 	Connection connection = ManagerConnection.getInstance().getConnection();
 
-	//Users user = new Users();
+	// Users user = new Users();
 
 	@Override
 	public boolean createUser(Users user) throws SQLException {
@@ -30,9 +29,9 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 
 			preparedStatement.executeUpdate();
 			System.out.println("Now you are one of users.");
-			
-		return true;
-			
+
+			return true;
+
 		}
 
 	}
@@ -49,8 +48,8 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 
 			while (rs.next()) {
 
-				Persons persons = new Persons(rs.getInt("personsId"), rs.getString("firstName"), rs.getString("lastName"),
-						rs.getString("phoneNumber"));
+				Persons persons = new Persons(rs.getInt("personsId"), rs.getString("firstName"),
+						rs.getString("lastName"), rs.getString("phoneNumber"));
 
 				listperson.add(persons);
 			}
@@ -85,23 +84,32 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 	@Override
 	public Persons getPerson(String lastName, List<Persons> list) throws SQLException {
 		Persons person = null;
-		for (int i = 0; i < list.size(); i++) {
-			if (lastName.equals(list.get(i).getLastName())) {
-				person = list.get(i);
-			}
+
+		String query = "SELECT * FROM persons WHERE lastName = ?";
+
+		ResultSet rs = null;
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		preparedStatement.setString(1, lastName);
+		rs = preparedStatement.executeQuery();
+
+		if (rs.next()) {
+			person = new Persons(rs.getInt("personsId"), rs.getString("firstName"), rs.getString("lastName"),
+					rs.getString("phoneNumber"));
+
 		}
+		rs.close();
 
 		return person;
 	}
 
 	@Override
-	public boolean updatePerson(Persons person) throws SQLException {
-		String query = "UPDATE person SET firstName = ?, lastName= ?, phoneNumber = ? WHERE personsId = ?";
+	public boolean updatePerson(Persons person, int userID) throws SQLException {
+		String query = "UPDATE persons SET firstName = ?, lastName= ?, phoneNumber = ? WHERE personsId = ?";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
 			preparedStatement.setString(1, person.getFirstName());
 			preparedStatement.setString(2, person.getLastName());
 			preparedStatement.setString(3, person.getPhoneNumber());
-
+			preparedStatement.setInt(4, person.getPersonsID());
 			if (preparedStatement.executeUpdate() == 1) {
 				return true;
 			} else {
@@ -145,6 +153,7 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 		}
 		return false;
 	}
+
 	public boolean saveUser(Users user) throws SQLException {
 		String query = "INSERT INTO users (firstName,lastName,userspassword) VALUES (?,?,?)";
 		try (PreparedStatement preparedStatement = connection.prepareStatement(query);) {
@@ -172,7 +181,7 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 
 			if (rs.next()) {
 				user = new Users(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
-						rs.getString("password"));
+						rs.getString("userspassword"));
 			}
 
 		}
@@ -183,31 +192,59 @@ public class PhoneBookDAOImplementation implements PhoneBookDAOInterface {
 
 	@Override
 	public boolean checkUserLogin(String lastName, String userspassword) throws SQLException {
-		//	Users user = null;
-			String query = "SELECT * FROM users WHERE lastName = ? AND userspassword=?";
+		// Users user = null;
+		String query = "SELECT * FROM users WHERE lastName = ? AND userspassword=?";
 
-			ResultSet rs = null;
-			PreparedStatement preparedStatement = connection.prepareStatement(query);
-				preparedStatement.setString(1, lastName);
-				preparedStatement.setString(2,userspassword);
-				rs = preparedStatement.executeQuery();
+		ResultSet rs = null;
+		try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+			preparedStatement.setString(1, lastName);
+			preparedStatement.setString(2, userspassword);
+			rs = preparedStatement.executeQuery();
 
-				if (rs.next()) {
-					rs.close();
-					return true;
-				}
-				else
-				{
-					rs.close();
-					return false;
-				}
-
-
+			if (rs.next()) {
+				return true;
+			} else {
+				rs.close();
+				return false;
+			}
 		}
 
 	}
 
-	
-	
+	@Override
+	public int getUserID(String lastname, String password) throws SQLException {
+		// Users user = null;
+		String query = "SELECT * FROM users WHERE lastName = ? AND userspassword=?";
 
+		ResultSet rs = null;
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		preparedStatement.setString(1, lastname);
+		preparedStatement.setString(2, password);
+		rs = preparedStatement.executeQuery();
+		rs.next();
 
+		return rs.getInt("id");
+
+	}
+
+	@Override
+	public List<Persons> getPersonsByUser(int userID) throws SQLException {
+		List<Persons> persons = new ArrayList<>();
+		String query = "SELECT * FROM persons WHERE user = ?";
+
+		ResultSet rs = null;
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		preparedStatement.setInt(1, userID);
+
+		rs = preparedStatement.executeQuery();
+
+		while (rs.next()) {
+			Persons person = new Persons(rs.getInt("personsId"), rs.getString("lastName"), rs.getString("firstName"),
+					rs.getString("phoneNumber"));
+			persons.add(person);
+		}
+
+		return persons;
+	}
+
+}

@@ -65,10 +65,10 @@ public class PhoneBookUI {
 	}
 
 	public void deletePerson(int personsID) {
-		
+
 		try {
 			person = PBIDAO.getPerson(personsID);
-		     System.out.println(person);
+			System.out.println(person);
 			System.out.println("Are you sure that you want delete this contact?\n(R-Run/S-Stop)");
 			char allow = input.next().charAt(0);
 			if (allow == 'R' || allow == 'r') {
@@ -87,7 +87,7 @@ public class PhoneBookUI {
 	public void doSearch() throws SQLException {
 		System.out.println("Please enter last name of person you'r looking for:");
 		String lastName = input.nextLine();
-		PBIDAO.getPerson(lastName, Persons.list);
+		person = PBIDAO.getPerson(lastName, Persons.list);
 		System.out.println(person);
 	}
 

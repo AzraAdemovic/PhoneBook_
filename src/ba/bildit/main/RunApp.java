@@ -2,6 +2,7 @@ package ba.bildit.main;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import ba.bild.UI.Menu;
@@ -38,8 +39,8 @@ public class RunApp {
 			num = input.nextInt();
 			input.nextLine();
 			switch (num) {
-			
-			case 0 : 
+
+			case 0:
 				num = 0;
 				break;
 			case 1:
@@ -51,7 +52,7 @@ public class RunApp {
 				System.out.println("Enter password:");
 				String password = input.nextLine();
 				user.setPassword(password);
-				while(!(PBBO.isPasswordValid(password))) {
+				while (!(PBBO.isPasswordValid(password))) {
 					System.out.println("Try again:");
 					password = input.nextLine();
 				}
@@ -63,7 +64,7 @@ public class RunApp {
 				String lastname = input.nextLine();
 				System.out.println("Enter password:");
 				password = input.nextLine();
-				if (PBDAO.checkUserLogin(lastname, password)){
+				if (PBDAO.checkUserLogin(lastname, password)) {
 					while (running) {
 
 						menu.showOptions();
@@ -71,34 +72,45 @@ public class RunApp {
 						switch (option) {
 
 						case 1:
-							int ID = user.getUsersID();
+
+							int ID = PBDAO.getUserID(lastname, password);
 							user = PBDAO.getUser(ID);
-							System.out.println(user);
+							// System.out.println(user);
 
 							person = PBUI.createPerson();
 							if (PBBO.isPhoneNumberValid(person.getPhoneNumber(), person)) {
-								PBDAO.savePerson(person ,ID);
+								PBDAO.savePerson(person, ID);
 							} else {
 								System.out.println("Contact can not be saved. Please try again.");
 							}
 
 							break;
 						case 2:
+							int id = PBDAO.getUserID(lastname, password);
+							System.out.println("You can edit this list of persons:\n");
+							List<Persons> contactList = PBDAO.getPersonsByUser(id);
+							for (int i = 0; i < contactList.size(); i++) {
+								System.out.println(contactList.get(i).toString());
+							}
+
 							System.out.print("Please enter person's id you'd like to update: ");
 							personId = input.nextInt();
-							try {
-								person = PBDAO.getPerson(personId);
-								//Persons editPerson = PBUI.editPerson();
+							if (PBBO.checkIfIdIsValid(personId, PBDAO.getPersonsByUser(id))) {
+								try {
+									person = PBDAO.getPerson(personId);
 
-								if (PBDAO.updatePerson(PBUI.editPerson(personId))) {
-									System.out.println("Updated.");
-								} else {
-									System.out.println("Failed.");
+									if (PBDAO.updatePerson(PBUI.editPerson(personId), id)) {
+										System.out.println("Updated.");
+									} else {
+										System.out.println("Failed.");
+									}
+
+								} catch (SQLException e) {
+
+									e.printStackTrace();
 								}
-
-							} catch (SQLException e) {
-
-								e.printStackTrace();
+							} else {
+								System.out.println("Protected.");
 							}
 							break;
 						case 3:
